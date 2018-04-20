@@ -44,6 +44,22 @@ export default class Path {
     return cmds.join('');
   }
 
+  // TSAI version
+  toSvgPath(scale, translate) {
+    let cmds = this.commands.map((c) => {
+      let args = c.args.map((arg, idx) => {
+        let isXCoordinate = idx % 2 === 0
+        let _translate = isXCoordinate ? translate.x : translate.y;
+        let transformedArg = arg * scale + _translate;
+        let finalArg = isXCoordinate ? transformedArg : -transformedArg
+        return Math.round(finalArg * 100) / 100;
+      });
+      return `${SVG_COMMANDS[c.command]}${args.join(' ')}`;
+    });
+
+    return cmds.join('');
+  };
+
   /**
    * Gets the "control box" of a path.
    * This is like the bounding box, but it includes all points including
