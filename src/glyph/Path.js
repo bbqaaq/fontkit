@@ -44,22 +44,6 @@ export default class Path {
     return cmds.join('');
   }
 
-  // TSAI version
-  toSvgPath(scale, translate) {
-    let cmds = this.commands.map((c) => {
-      let args = c.args.map((arg, idx) => {
-        let isXCoordinate = idx % 2 === 0
-        let _translate = isXCoordinate ? translate.x : translate.y;
-        let transformedArg = arg * scale + _translate;
-        let finalArg = isXCoordinate ? transformedArg : -transformedArg
-        return Math.round(finalArg * 100) / 100;
-      });
-      return `${SVG_COMMANDS[c.command]}${args.join(' ')}`;
-    });
-
-    return cmds.join('');
-  };
-
   /**
    * Gets the "control box" of a path.
    * This is like the bounding box, but it includes all points including
@@ -214,9 +198,9 @@ export default class Path {
    */
   transform(m0, m1, m2, m3, m4, m5) {
     return this.mapPoints((x, y) => {
-      x = m0 * x + m2 * y + m4;
-      y = m1 * x + m3 * y + m5;
-      return [x, y];
+      let _x = m0 * x + m2 * y + m4;
+      let _y = m1 * x + m3 * y + m5;
+      return [_x, _y];
     });
   }
 
